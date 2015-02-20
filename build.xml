@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<project name="ntlm" default="all">
+    <property name="app.home" location=".." />
+    
+    <path id="classpath">
+	<fileset dir="${basedir}/lib">
+	    <include name="**/*.jar" />
+	</fileset>
+    </path>
+
+    <target name="all" depends="compile">
+    </target>
+
+    <target name="clean">
+        <delete dir="${basedir}/classes"></delete>
+        <delete file="${basedir}/ntlm.jar"></delete>
+    </target>
+    
+    <target name="compile">
+        <mkdir dir="${basedir}/classes"/>
+	<javac srcdir="${basedir}/src"
+               destdir="${basedir}/classes">
+            <classpath refid="classpath" />
+	    <include name="**/*.java" />
+	</javac>
+    </target>
+
+    <target name="expandlib" depends="compile">
+        <unzip dest="${basedir}/classes">
+            <fileset dir="${basedir}/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+        </unzip>
+    </target>
+
+    <target name="fulljar" depends="expandlib">
+        <jar destfile="${basedir}/ntlm.jar"
+             basedir="${basedir}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="ntlmproxy.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>
+
